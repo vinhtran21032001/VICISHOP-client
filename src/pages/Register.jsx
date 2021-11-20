@@ -8,6 +8,9 @@ import axios from 'axios';
 import { ArrowRightAlt, Close } from '@material-ui/icons';
 import { Link } from 'react-router-dom';
 import { zoomIn } from 'react-animations';
+import { useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
+import { registerFail, registerStart, registerSuccess } from '../redux/registor';
 
 const Container = styled.div`
 position: relative;
@@ -68,7 +71,11 @@ const Button = styled.button`
     background-color:teal;
     border:none;
     color :white;
-
+    cursor: pointer;
+    &:disabled{
+        background-color : #03aaaa;
+        cursor:not-allowed;
+    }
 `;
 const FormField = styled.div`
     width:100%;
@@ -167,6 +174,9 @@ const ButtonRedirect = styled.div`
 const Register = () => {
     const ref = useRef();
     const [modal, setModal] = useState(false);
+    const registerStatus = useSelector(state=>state.registor);
+    const dispatch = useDispatch();
+   
 
     const initialValues = {
         name : "",
@@ -200,26 +210,27 @@ const Register = () => {
 
         const onSubmit =  async (values, {resetForm }) =>{
             const {confirmpassword,...data} = values;
-            
-           try {
-                const res = await axios.post("https://vicishop.herokuapp.com/api/auth/resgistor",data)
-                res && resetForm();
-                res && setModal(true);
-           } 
-           catch(err) {
-               console.log(err)
-           }
+            dispatch(registerStart());
+            try {
+                    const res = await axios.post("https://vicishop.herokuapp.com/api/auth/resgistor",data)
+                    resetForm();
+                    dispatch(registerSuccess())  
+            } 
+            catch(err) {
+                    dispatch(registerFail());
+               
+            }
+           setModal(true);
            
         }
+
+
 
         const handleCloseModal = () => {
             setModal(false)
         }
         
-        const onHideModal = () => {
-            console.log("vinh")
-        }
-
+    
         
         // effect
 
@@ -252,8 +263,6 @@ const Register = () => {
                     onSubmit={onSubmit}
                 >
                     {formikProps=>{
-                        const {values, errors,touched} = formikProps
-                        console.log({values, errors, touched})
                         return (
                             <Form>
                                <FormField>
@@ -302,16 +311,16 @@ const Register = () => {
                                 />
                                 </FormField>                       
                                 <Agreement>By creating an account, I consent to the processing of my personal data in accordance with the <b>PRIVACY POLICY</b></Agreement>
-                                <Button type="submit">CREATE</Button>     
+                                <Button disabled={registerStatus.isFetching} type="submit">CREATE</Button>     
                             </Form>
                         )
                     }}
                 </Formik>
                 {modal && <ModalContainer >
-                    <Modal ref={ref} onClickOutSide={onHideModal} >
+                    <Modal ref={ref} >
                         <IconClose onClick={handleCloseModal}><Close/></IconClose>
-                        <TitleModal>SUCCESSFULL REGISTRATION</TitleModal>
-                        <Link to="/login"><ButtonRedirect>LOGIN <ArrowRightAlt/></ButtonRedirect></Link>
+                        <TitleModal>{registerStatus.Error ? "Account already exist" : "REGISTER SUCCESSFUL"}</TitleModal>
+                      { registerStatus.Success  && <Link to="/login"><ButtonRedirect>LOGIN <ArrowRightAlt/></ButtonRedirect></Link>}
                     </Modal>
                 </ModalContainer>}
             </Wrapper>
