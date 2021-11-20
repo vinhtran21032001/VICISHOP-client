@@ -3,22 +3,34 @@ import { useLocation, useNavigate, useParams } from 'react-router';
 import styled, { keyframes } from 'styled-components';
 import {bounceInUp, rotateInDownLeft, rubberBand, slideInDown, zoomIn, zoomInDown} from 'react-animations'
 import { ZoomIn } from '@material-ui/icons';
+import {ipad, mobile} from '../responsive'
 
 
 const Container = styled.div`
-    width:100;
+
+    width:70vw;
     height:100vh;
     padding:50px 0;
+    
     box-sizing:border-box;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction:column;
+    margin:0 auto;
 `;
 const Title = styled.div`
     font-size:80px;
     font-weight:700;
     color:teal;
+    ${ipad({
+        fontSize:"50px",
+        fontWeight:"600"
+    })}
+    ${mobile({
+        fontSize:"30px",
+        fontWeight:"600"
+    })}
  `;
 
  const TextZoom = keyframes`${zoomInDown}`;
@@ -27,6 +39,9 @@ const TitleChar= styled.span`
     animation-delay : ${props => props.delay*0.125}s;
     animation-fill-mode:backwards;
     margin:0 10px;
+    ${mobile({
+        margin:"0 2px",
+    })}
 
 `;
 const ImageContainer = styled.div`
@@ -39,6 +54,9 @@ const Image = styled.img`
 `;
 const Desc = styled.p`
     font-size:30px;
+    ${mobile({
+        fontSize:"20px",
+    })}
     
 `;
 
