@@ -206,8 +206,6 @@ const Register = () => {
         })
 
 
-
-
         const onSubmit =  async (values, {resetForm }) =>{
             const {confirmpassword,...data} = values;
             dispatch(registerStart());
