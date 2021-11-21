@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 
 import styled from 'styled-components';
@@ -70,7 +71,7 @@ const Error = styled.p`
     color:red;
 `;
 
-const Link = styled.a`
+const LinkItem = styled.a`
     font-size:12px;
     text-decoration:underline;
     margin-top:10px;
@@ -111,8 +112,8 @@ function Login() {
                     disabled={isFetching}
                     >LOGIN</Button>
                     {error && <Error>Something went wrong...!</Error>}
-                     <Link>DO NOT YOU REMEMBER THE PASSWORD?</Link>
-                    <Link>CREATE A NEW ACCOUNT</Link>
+                     <LinkItem>DO NOT YOU REMEMBER THE PASSWORD?</LinkItem>
+                    <LinkItem><Link to="/registor">CREATE A NEW ACCOUNT</Link></LinkItem>
                 </Form>
 
             </Wrapper>

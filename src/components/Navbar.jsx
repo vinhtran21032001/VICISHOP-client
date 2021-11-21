@@ -251,9 +251,15 @@ const TitleTool = styled.p`
 function Navbar() {
     const [isToolStrip, setIsToolStrip] = useState(false)
     // const [amout,setAmount] = useState(0);
-  
+    
+
     let user = useSelector(state=>state.user.currentUser);
-    const cartRedux = useSelector(state=>state.cart); 
+   
+    let cartRedux = useSelector(state=>state.cart); 
+
+    // useEffect 
+    
+
     const dispatch = useDispatch()
 
 
@@ -264,6 +270,7 @@ function Navbar() {
         setIsToolStrip(false);
         dispatch(logout());
         user = null;
+        dispatch(resetProduct({}));
     }
 
 
@@ -274,10 +281,9 @@ function Navbar() {
                   headers: {token : "Beare " + user.token }
               })
           
-              if(cartRedux.products.length <=0 && res.data.products.length > 0) {
+              if( res.data.products.length > 0) {
                   console.log(res.data)
                   dispatch(resetProduct(res.data));
-               
               }
             } 
             catch(err){
@@ -285,7 +291,8 @@ function Navbar() {
             }
         }
        user && getCart();
-    },[user, cartRedux])
+       console.log("check")
+    },[user])
 
 
     // useEffect(()=>{
@@ -405,7 +412,7 @@ function Navbar() {
                     }
                     <MenuItem>
                         <LinkItem to="/cart">
-                            <Badge badgeContent={user? cartRedux?.products.length : 0} color="primary">
+                            <Badge badgeContent={user && cartRedux.products ? cartRedux?.products.length : 0} color="primary">
                                 <ShoppingCartOutlined></ShoppingCartOutlined>
                             </Badge>
                         </LinkItem>
